@@ -1,4 +1,5 @@
 import math
+import itertools
 
 
 def read_file_lines(fl):
@@ -62,7 +63,7 @@ def p2_1(data):
         end = int(end)
 
         for num in range(start, end+1):
-            digits = 1 + math.floor(math.log10(num))
+            digits = 1 + math.floor( math.log10(num) )
 
             if digits % 2 != 0:
                 continue
@@ -76,10 +77,46 @@ def p2_1(data):
     return counter
 
 
+def p2_2(data):
+    def digits(n):
+        return 1 + math.floor( math.log10(n) )
+    def get_divisibles(n):
+        num_digits = digits(n)
+        return [i for i in range(1, num_digits//2+1) if num_digits%i==0]
+
+    ranges = data[0].split(",")
+
+    counter = 0
+
+    for r in ranges:
+        start, end = r.split("-")
+
+        start = int(start)
+        end = int(end)
+
+        for num in range(start, end+1):
+            divisibles = get_divisibles(num)
+
+            num_str = str(num)
+            invalid = False
+            
+            for divisible in divisibles:
+                batched_num = ["".join(sub) for sub in itertools.batched(num_str, divisible)]
+
+                if all([sub==batched_num[0] for sub in batched_num]):
+                    invalid = True
+
+            if invalid:
+                counter += num
+
+    return counter
+
+
 problem_table = {
     "p1_1": ["aoc1_1.data", p1_1],
     "p1_2": ["aoc1_1.data", p1_2],
-    "p2_1": ["aoc2_1.data", p2_1]
+    "p2_1": ["aoc2_1.data", p2_1],
+    "p2_2": ["aoc2_1.data", p2_2]
 
 }
 
@@ -92,4 +129,4 @@ def ex(problem_key):
 
 
 if __name__ == "__main__":
-    ex("p2_1")
+    ex("p2_2")
