@@ -112,11 +112,39 @@ def p2_2(data):
     return counter
 
 
+def p3_1(data):
+    total_power = 0
+    
+    for bank in data:
+        right_max_lookup = []
+        largest_to_right = -1
+        largest = -1 # doesn't include last digit since it can't be in the tens place
+        largest_idx = -1
+        idx = len(bank) - 1
+
+        while idx >= 0:
+            digit = int(bank[idx])
+            right_max_lookup.insert(0, largest_to_right)
+            if digit > largest_to_right:
+                largest_to_right = digit
+            if digit >= largest and idx != (len(bank) - 1):
+                largest = digit
+                largest_idx = idx
+            idx -= 1
+
+        power = 10*largest + right_max_lookup[largest_idx]
+
+        total_power += power
+
+    return total_power
+
+
 problem_table = {
     "p1_1": ["aoc1_1.data", p1_1],
     "p1_2": ["aoc1_1.data", p1_2],
     "p2_1": ["aoc2_1.data", p2_1],
-    "p2_2": ["aoc2_1.data", p2_2]
+    "p2_2": ["aoc2_1.data", p2_2],
+    "p3_1": ["aoc3_1.data", p3_1]
 
 }
 
@@ -129,4 +157,4 @@ def ex(problem_key):
 
 
 if __name__ == "__main__":
-    ex("p2_2")
+    ex("p3_1")
