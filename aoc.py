@@ -166,6 +166,47 @@ def p3_2(data):
     return total_power
 
 
+def p4_1(data):
+    PAPER_ROLL = "@"
+    PAPER_ROLL_LIMIT = 4
+    row_end = len(data)
+
+    DIRS = [
+        [-1,1],
+        [0,1],
+        [1,1],
+        [-1,0],
+        [1,0],
+        [-1,-1],
+        [0,-1],
+        [1,-1],
+    ]
+
+    total_accessible = 0
+
+    for i, row in enumerate(data):
+        col_end = len(row)
+
+        for j, col in enumerate(row):
+            near_paper_rolls = 0
+
+            if data[i][j] != PAPER_ROLL:
+                continue
+
+            for dr, dc in DIRS:
+                r = i + dr
+                c = j + dc
+
+                if r >= 0 and r < row_end and c >= 0 and c < col_end:
+                    if data[r][c] == PAPER_ROLL:
+                        near_paper_rolls += 1
+
+            if near_paper_rolls < PAPER_ROLL_LIMIT:
+                total_accessible += 1
+
+    return total_accessible
+
+
 if __name__ == "__main__":
     problem = sys.argv[1]
 
