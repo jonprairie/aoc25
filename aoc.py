@@ -207,6 +207,59 @@ def p4_1(data):
     return total_accessible
 
 
+def p4_2(data):
+    PAPER_ROLL = "@"
+    PAPER_ROLL_LIMIT = 4
+    DIRS = [
+        [-1,1],
+        [0,1],
+        [1,1],
+        [-1,0],
+        [1,0],
+        [-1,-1],
+        [0,-1],
+        [1,-1],
+    ]
+
+    def is_accessible(grid, r, c):
+        near_paper_rolls = 0
+        row_len = len(grid[0])
+        col_len = len(grid)
+
+        for dr, dc in DIRS:
+            new_r = r + dr
+            new_c = c + dc
+
+            if new_r >= 0 and new_r < row_len and new_c >= 0 and new_c < col_len:
+                if grid[new_r][new_c] == PAPER_ROLL:
+                    near_paper_rolls += 1
+
+        return near_paper_rolls < PAPER_ROLL_LIMIT
+
+    total_accessible = 0
+    next_input = []
+
+    for i, row in enumerate(data):
+        next_input.append([])
+        
+        for j, char in enumerate(row):
+            if char == PAPER_ROLL:
+                if is_accessible(data, i, j):
+                    total_accessible += 1
+                    next_input[i].append(".")
+                else:
+                    next_input[i].append("@")
+            else:
+                next_input[i].append(".")
+
+    next_input = ["".join(row) for row in next_input]
+
+    if total_accessible > 0:
+        return total_accessible + p4_2(next_input)
+    else:
+        return 0
+    
+
 if __name__ == "__main__":
     problem = sys.argv[1]
 
