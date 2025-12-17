@@ -1,3 +1,4 @@
+import sys
 import math
 import itertools
 
@@ -165,23 +166,21 @@ def p3_2(data):
     return total_power
 
 
-problem_table = {
-    "p1_1": ["aoc1_1.data", p1_1],
-    "p1_2": ["aoc1_1.data", p1_2],
-    "p2_1": ["aoc2_1.data", p2_1],
-    "p2_2": ["aoc2_1.data", p2_2],
-    "p3_1": ["aoc3_1.data", p3_1],
-    "p3_2": ["aoc3_1.data", p3_2]
-
-}
-
-
-def ex(problem_key):
-    problem = problem_table[problem_key]
-    f = problem[1]
-    data = read_file_lines(problem[0])
-    print(f(data))
-
-
 if __name__ == "__main__":
-    ex("p3_2")
+    problem = sys.argv[1]
+
+    if len(sys.argv) > 2:
+        phase = sys.argv[2]
+    else:
+        phase = "1"
+
+    problem_name = f"p{problem}_{phase}"
+    
+    if problem_name in locals():
+        f = locals()[problem_name]
+
+        data_file_name = f"aoc{problem}.data"
+        data = read_file_lines(data_file_name)
+        print(f(data))
+    else:
+        print(f"problem not found: {problem} {phase}")
