@@ -139,12 +139,39 @@ def p3_1(data):
     return total_power
 
 
+def p3_2(data):
+    def find_largest_n(s, n):
+        if n > len(s):
+            raise ValueError(f"not enough digits in '{s}', needed {n}.")
+
+        if n == 0:
+            return ""
+
+        largest = "" 
+        largest_idx = -1
+        for i in range( len(s) - n + 1 ):
+            if s[i] > largest:
+                largest = s[i]
+                largest_idx = i
+
+        return largest + find_largest_n(s[largest_idx+1:], n-1)
+
+    total_power = 0
+    
+    for bank in data:
+        power = find_largest_n(bank, 12)
+        total_power += int(power)
+
+    return total_power
+
+
 problem_table = {
     "p1_1": ["aoc1_1.data", p1_1],
     "p1_2": ["aoc1_1.data", p1_2],
     "p2_1": ["aoc2_1.data", p2_1],
     "p2_2": ["aoc2_1.data", p2_2],
-    "p3_1": ["aoc3_1.data", p3_1]
+    "p3_1": ["aoc3_1.data", p3_1],
+    "p3_2": ["aoc3_1.data", p3_2]
 
 }
 
@@ -157,4 +184,4 @@ def ex(problem_key):
 
 
 if __name__ == "__main__":
-    ex("p3_1")
+    ex("p3_2")
