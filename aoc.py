@@ -1,6 +1,7 @@
 import sys
 import math
 import itertools
+import bisect
 
 
 def read_file_lines(fl):
@@ -258,7 +259,75 @@ def p4_2(data):
         return total_accessible + p4_2(next_input)
     else:
         return 0
+
+
+def read_p5_data(data):
+    ranges = []
+    ids = []
+
+    phase = 0
+
+    for row in data:
+        if row == "":
+            phase = 1
+        elif phase == 0: # ranges
+            start, end = row.split("-")
+
+            start = int(start)
+            end = int(end)
+            
+            ranges.append([start, end])
+        else: # ids
+            ids.append(int(row))
+
+    return ranges, ids
     
+
+def p5_1(data):
+    total = 0
+
+    ranges, ids = read_p5_data(data)
+
+    for i in ids:
+        fresh = False
+        for r in ranges:
+            if i >= r[0] and i <= r[1]:
+                fresh = True
+                break
+        if fresh:
+            total += 1
+
+    return total
+
+
+def p5_2(data):
+    input_ranges, _ = read_p5_data(data)
+    ranges = []
+    
+    for row in input_ranges:
+        lo = bisect.bisect_left(ranges, row[0], key=lambda x: x[1])
+        hi = bisect.bisect_right(ranges, row[1], key=lambda x: x[0])
+
+        if hi == lo or lo == len(ranges):
+            # no overlap
+            ranges.insert(lo, row)
+        elif hi - lo == 1:
+            # overlap with single item at idx lo
+            ranges[lo][0] = min(ranges[lo][0], row[0])
+            ranges[lo][1] = max(ranges[lo][1], row[1])
+        else:
+            # overlap with multiple items from idx lo to idx hi-1
+            row[0] = min(ranges[lo][0], row[0])
+            row[1] = max(ranges[hi-1][1], row[1])
+            del ranges[lo:hi]
+            ranges.insert(lo, row)
+
+    total = 0
+    for r in ranges:
+        total += r[1] - r[0] + 1
+
+    return total
+
 
 if __name__ == "__main__":
     problem = sys.argv[1]
